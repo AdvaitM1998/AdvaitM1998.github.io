@@ -1,5 +1,6 @@
 body {
-    background-color: white;
+    background-image: url('../images/valentines-day-background.jpg');
+    background-size: cover;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -9,13 +10,18 @@ body {
     flex-direction: column;
 }
 
-.buttons {
+.buttons-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
     flex-direction: row;
     align-items: end;
     flex-wrap: wrap;
+}
+
+button {
+    border-radius: 5%;
+    min-width: 5rem;
 }
 
 #no-button {

@@ -15,47 +15,11 @@ const answers_no = {
         "Please give me a chance!",
         "I am begging you to stop!",
         "Ok, Let's just start over.."
-    ],
-    french: [
-        "Non",
-        "Tu es sûr ?",
-        "Tu es vraiment sûr ??",
-        "Tu es vraiment vraiment sûr ???",
-        "Réfléchis encore?",
-        "Tu ne crois pas aux deuxièmes chances ?",
-        "Pourquoi tu es si froid?",
-        "Peut-être, on peut en parler ?",
-        "Je ne vais pas demander encore une fois!",
-        "D'accord, maintenant ca me fait mal!",
-        "Tu es juste méchant!",
-        "Pourquoi tu me fais ça?",
-        "Donnez-moi une chance plz!",
-        "Je te supplie d'arrêter!",
-        "D'accord, recommençons.."
-    ],
-    thai: [
-        "ไม่อ่ะ",
-        "แน่ใจจริงๆหรอคะ?",
-        "แน่ใจจริงๆ จริงๆนะคะ?",
-        "อย่าบอกนะว่านี่แน่ใจสุดๆแล้วจริงๆ ?",
-        "ลองคิดดูอีกทีหน่อยสิคะ..",
-        "ขอโอกาศที่สองทีค่ะ..",
-        "อย่าเย็นชาสิคะ กระซิกๆ",
-        "ขอร้องนะคะ",
-        "น้าาาๆๆๆๆๆ",
-        "เราจะร้องไห้เอานะ กระซิกๆ",
-        "จะเอางี้ๆจริงหรอคะ",
-        "ฮือออออ",
-        "ขอโอกาศครั้งที่สองที่ค่ะ!",
-        "ขอร้องละค่าาา",
-        "โอเคค่ะ.. งั้นเริ่มใหม่ !"
     ]
 };
 
 answers_yes = {
-    "english": "Yes",
-    "french": "Oui",
-    "Thailand": "เย่ คืนดีกันแล้วน้า"
+    "english": "Yes"
 }
 
 let language = "english"; // Default language is English
@@ -101,11 +65,15 @@ yes_button.addEventListener('click', () => {
     banner.src = "public/images/yes.gif";
     refreshBanner();
     // hide buttons div
-    let buttons = document.getElementsByClassName('buttons')[0];
+    let buttons = document.getElementsByClassName('buttons-container')[0];
     buttons.style.display = "none";
     // show message div
     let message = document.getElementsByClassName('message')[0];
     message.style.display = "block";
+
+    playAudio("public/sounds/dil-laga-liya.mp3");
+
+    popConfetti();
 });
 
 function refreshBanner() {
@@ -116,38 +84,38 @@ function refreshBanner() {
     banner.src = src;
 }
 
-function changeLanguage() {
-    const selectElement = document.getElementById("language-select");
-    const selectedLanguage = selectElement.value;
-    language = selectedLanguage;
+function playAudio(audioPath) {
+    // Create and play audio element
+    const audio = new Audio(audioPath);
+    audio.play();
+}
 
-    // Update question heading
-    const questionHeading = document.getElementById("question-heading");
-    if (language === "french") {
-        questionHeading.textContent = "Tu veux être mon valentin?";
-    } else if (language === "thai") {
-        questionHeading.textContent = "คืนดีกับเราได้อ่ะป่าว?";
-    } else {
-        questionHeading.textContent = "Will you be my valentine?";
-    }
+function popConfetti() {
+    const confettiPieces = 90;
+    for (let i = 0; i < confettiPieces; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#ffa502', '#ff69b4'][Math.floor(Math.random() * 5)];
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.top = '-10px';
+        confetti.style.opacity = '1';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9999';
+        document.body.appendChild(confetti);
 
-    // Reset yes button text
-    yes_button.innerHTML = answers_yes[language];
+        const duration = 2 + Math.random() * 1;
+        const xMove = (Math.random() - 0.5) * 300;
+        
+        confetti.animate([
+            { transform: 'translateY(0) translateX(0)', opacity: 1 },
+            { transform: `translateY(${window.innerHeight + 10}px) translateX(${xMove}px)`, opacity: 0 }
+        ], {
+            duration: duration * 1000,
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
 
-    // Reset button text to first in the new language
-    if (clicks === 0) {
-        no_button.innerHTML = answers_no[language][0];
-    } else {
-        no_button.innerHTML = answers_no[language][clicks];
-    }
-
-    // Update success message
-    const successMessage = document.getElementById("success-message");
-    if (language === "french") {
-        successMessage.textContent = "Yepppie, à bientôt :3";
-    } else if (language === "thai") {
-        successMessage.textContent = "ฮูเร่ คืนดีกันแล้วน้า :3";
-    } else {
-        successMessage.textContent = "Yepppie, see you sooonnn :3";
+        setTimeout(() => confetti.remove(), duration * 1000);
     }
 }
